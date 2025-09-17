@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>업로드 페이지</title>
+<script type="text/javascript">
+
+	function send(f){
+		let title = f.title.value.trim();
+		let photo1 = f.photo[0].value;
+		let photo2 = f.photo[1].value;
+		
+		if(title==""){
+			alert("제목을 입력하세요");
+			f.title.value="";
+			f.title.focus();
+		}
+		
+		if(photo1==""){
+			alert("사진1을 선택하세요.")
+			return;
+		}
+		if(photo2==""){
+			alert("사진2을 선택하세요.")
+			return;
+		}
+		
+		f.action = "upload2.do";
+		f.submit(); // 전송
+		
+	}
+</script>
+</head>
+<body>
+
+	<form action="" method="POST" enctype="multipart/form-data">
+		제목 <input name="title"> <br>
+		<!-- Spring에서는 여러개의 파일 업로드시 동일 파라메터명을 사용해야 한다. multipartFile 객체가 1개밖에 안만들어지기때문에 반드시 name의 파라메터 명은 동일해야한다. -->
+		사진1 <input name="photo" type="file"> <br>
+		사진2 <input name="photo" type="file"> <br>
+			<input type="button" value="사진등록" onclick="send(this.form)">
+	</form>
+
+</body>
+</html>

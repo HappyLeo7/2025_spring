@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="photo">
+
+	<!-- 전체조회 -->
+	<select id="photo_list" resultType="vo.PhotoVo">
+		select * from photo order by p_idx desc
+	</select>
+
+	<!-- p_idx에 대한 PhotoVo 1개 얻어오기 -->
+	<select id="photo_one" resultType="photo" parameterType="int">
+		select * from photo where p_idx=#{p_idx}
+	</select>
+	
+	<!-- insert -->
+	<insert id="photo_insert" parameterType="photo">
+		insert into values(seq_photo_p_idx.nextval
+						   ,#{p+subject}
+						   ,#{p_content}
+						   ,#{p_filename}
+						   ,#{p_ip}
+						   ,sysdate
+						   ,sysdate
+						   ,#{mem_idx}
+						   )
+	</insert>
+	
+	<!-- 삭제 -->
+	<delete id="photo_delete" parameterType="int">
+		delete from phot where p_idx=#{p_idx}
+	</delete>
+	
+	<!-- 수정 -->
+	
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

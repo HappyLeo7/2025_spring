@@ -78,6 +78,9 @@ th{
 		if("${param.reason eq 'fail_pwd'}"=="true"){
 			alert("비밀번호가 틀렸습니다.");
 		}
+		if("${param.reason eq'session_timeout'}"=="true"){
+			alert("로그아웃되었습니다.");
+		}
 		
 	}
 	

@@ -16,8 +16,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- insert -->
 	<insert id="photo_insert" parameterType="photo">
-		insert into values(seq_photo_p_idx.nextval
-						   ,#{p+subject}
+		insert into photo values(seq_photo_p_idx.nextval
+						   ,#{p_subject}
 						   ,#{p_content}
 						   ,#{p_filename}
 						   ,#{p_ip}

@@ -1,0 +1,1 @@
+copy D:\Work\SpingFrameworkStudy\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\2025_0919_SpringPhotoGallery\images\*.* D:\Work\SpingFrameworkStudy\2025_0919_SpringPhotoGallery\src\main\webapp\images 

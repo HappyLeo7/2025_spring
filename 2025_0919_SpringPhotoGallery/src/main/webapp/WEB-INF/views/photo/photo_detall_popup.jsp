@@ -50,8 +50,10 @@
         
           <input class="btn btn-success" type="button" value='다운로드' style="display: none;">
           
-          <input class="btn btn-info" type="button" value="수정하기" style="display: none;">
-          <input class="btn btn-danger" type="button" value="삭제하기" style="display: none;">
+          <input class="btn btn-info" type="button" value="수정하기" style="display: none;"
+          			onclick="photo_modify_form();">
+          <input class="btn btn-danger" type="button" value="삭제하기" style="display: none;"
+          			onclick="photo_delete();">
           
           <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
         </div>

@@ -100,9 +100,17 @@
 		location.href="insert_form.do";
 		
 	}//end : insert_photo()
+
+	
+	//  수정 / 삭제할 p_idx를 저장해놓을 전역변수
+	// let은 지역변수때 많이사용 //전역변수 var?
+	var global_p_idx;
 	
 	function photo_detail(p_idx){
+	  global_p_idx=p_idx;
+
 	  $("#myModal").modal({backdrop: true});
+	  
 		
 	  $.ajax({
 		 url		: "photo_one.do"  //PhotoCon
@@ -149,7 +157,13 @@
 		 }
 	  });
 	
-	}
+	}//end : photo_detail()
+	
+	function photo_modify_form(){
+		
+		location.href="modify_form.do?p_idx="+global_p_idx //PhotoContoller
+		
+	}//end : phot_modify_form()
 	
 	
 </script>

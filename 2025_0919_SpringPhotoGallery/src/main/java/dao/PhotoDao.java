@@ -11,7 +11,7 @@ public interface PhotoDao {
 	
 	int insert(PhotoVo vo);
 	int update(PhotoVo vo);
-	int update_file(PhotoVo vo);
+	int update_filename(PhotoVo vo);
 	int delete(int p_idx);
 
 }

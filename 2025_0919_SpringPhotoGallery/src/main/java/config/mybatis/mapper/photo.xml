@@ -32,8 +32,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from phot where p_idx=#{p_idx}
 	</delete>
 	
-	<!-- 수정 -->
-	
+	<!-- 파일명만 수정 -->
+	<update id="photo_update_filename" parameterType="photo">
+	update photo set p_filename=#{p_filename}
+					,p_lastmodifydate=sysdate
+		where p_idx=#{p_idx}
+		
+	</update>
 	
 </mapper>
 

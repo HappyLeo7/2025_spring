@@ -1,7 +1,9 @@
 package controller;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -120,4 +122,72 @@ public class PhotoController {
 		System.out.println("ajax를 통해서 데이터 1개 가져오기");
 		return photo_dao.selecOne(p_idx);
 	}
+	
+	//수정폼
+	// /photo/photo_modify_form.do?p_idx=10
+	@RequestMapping("/photo/modify_form.do")
+	public String photo_modify_form(int p_idx,Model model) {
+		PhotoVo vo = photo_dao.selecOne(p_idx);
+		//내용을 <br>이기때문에 \n으로 바꿔야한다.
+		vo.setP_content(vo.getP_content().replaceAll("<br>", "\n"));
+		// request binding
+		model.addAttribute("vo", vo);
+		return"photo/photo_modify_form";
+	}
+	
+	
+	//	/photo/photo_upload.do?
+	@RequestMapping("/photo/photo_upload.do")
+	@ResponseBody
+	public Map<String,String> photo_upload(int p_idx,@RequestParam MultipartFile photo) throws Exception{
+		//리턴값 넣을곳
+		Map<String,String> map =new HashMap<String,String>();
+		
+		map.put("result", "fail");
+		
+		if(!photo.isEmpty()) { //업로드 파일 있으면
+			
+		
+			// Web 경로 -> 절대경로
+			String absPath=application.getRealPath("/images/");
+			System.out.println(absPath);
+			//수정할 포토 객체 정보
+			PhotoVo vo = photo_dao.selecOne(p_idx);
+			System.out.println(vo.getP_filename());
+			//기존파일 삭제
+			File delFile=new File(absPath,vo.getP_filename());
+			delFile.delete();
+			
+			//새파일 업로드처리
+			String p_filename = photo.getOriginalFilename(); // 받아온 정보에서 파일 순수한이름
+			File newFile = new File(absPath,p_filename);
+			
+			//아주 작은 확률로 동시에 들어올 경우를 방지하기 위해선 와일반복문을 써도된다.
+			if(newFile.exists()) {  //동일 파일명을 갖는 파일이 존재하냐
+				long tm =System.currentTimeMillis();
+				p_filename = String.format("%d_%s", tm,p_filename);
+				
+				newFile = new File(absPath,p_filename);
+				
+			}
+			
+			photo.transferTo(newFile);
+			
+			//새로운 파일명을 vo에 넣는다.
+			vo.setP_filename(p_filename);
+			
+			int res = photo_dao.update_filename(vo);
+			
+			//결과반환
+			map.put("result", "success");
+			map.put("p_filename", p_filename);
+			
+			return map;
+			
+		}//
+
+		
+		return map;
+	}
+	
 }

@@ -45,9 +45,9 @@ public class PhotoDaoImpl implements PhotoDao {
 	}
 
 	@Override
-	public int update_file(PhotoVo vo) {
+	public int update_filename(PhotoVo vo) {
 		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.update("photo.photo_update_filename",vo);
 	}
 
 	@Override

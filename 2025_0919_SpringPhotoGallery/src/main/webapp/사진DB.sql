@@ -24,9 +24,16 @@ alter table photo
 alter table photo
 	add constraint fk_photo_mem_idx foreign key(mem_idx)
 									references member(mem_idx); -- member에 있는 mem_idx를 참조한다.
-	
-drop table photo
-	
+									
+									
+--전체조회	
 select * from photo
 
+
+
 select * from photo order by 1 desc
+
+
+
+-- 삭제.....
+drop table photo

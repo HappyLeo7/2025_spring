@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import common.MyConstant;
 import dao.PhotoDao;
+import util.Paging;
 import vo.MemberVo;
 import vo.PhotoVo;
 
@@ -41,17 +43,49 @@ public class PhotoController {
 		System.out.println("-[PhotoController()]");
 	}
 	
+	/* ----------------------------------------------------- */
 	//전체조회
+	//page별 조회
+	//    /photo/list.do
+	//    /photo/list.do?page=1
 	@RequestMapping("/photo/list.do")
-	public String list(Model model) {
+	public String list(Model model, @RequestParam(name="page",defaultValue = "1")int nowPage) {
 		
-		List<PhotoVo> list =photo_dao.selectList();
+		//final int BLOCK_LIST = 8;// 1 화면에 보여질 게시물 갯수
+		
+		//가져올 위치 계산
+		int start=(nowPage-1)*MyConstant.Photo.BLOCK_LIST+1;
+		int end=start+MyConstant.Photo.BLOCK_LIST-1;
+		
+		Map<String,Object>map =new HashMap<String, Object>();
+		map.put("start", start);
+		map.put("end", end);
+		
+		List<PhotoVo> list =photo_dao.selectList(map);
+
+		//전체 게시물수 구하기
+		int rowTotal = photo_dao.selectRowTotal();
+		
+		//pageMenu 생성
+		String pageMenu = Paging.getPaging("list.do"
+											,nowPage
+											, rowTotal
+											, MyConstant.Photo.BLOCK_LIST
+											, MyConstant.Photo.BLOCK_PAGE);
+		
+		System.out.println(pageMenu);
+		
 		//System.out.println(list.get(0).getP_filename());
 		//결과적으로 request binding
 		model.addAttribute("list", list);
+		model.addAttribute("pageMenu",pageMenu);
+		
 		
 		return "photo/photo_list";
 	}
+	
+	
+	/* ----------------------------------------------------- */
 	
 	//TODO 등록폼 띄우기
 	@RequestMapping("/photo/insert_form.do")
@@ -188,6 +222,57 @@ public class PhotoController {
 
 		
 		return map;
+	}
+	
+	
+	//수정하기
+	@RequestMapping("/photo/modify.do")
+	public String modify(PhotoVo vo,RedirectAttributes ra) {
+		System.out.println("제목 내용 수정하기");
+		//세션에서 로그인 정보 가져오기
+		MemberVo user = (MemberVo) session.getAttribute("user");
+		
+		//Session Timeout
+		if(user==null) {
+			ra.addAttribute("reason","session_timeout");
+			// redirect:../member/login_form.do?reason=session_timeout
+			return "redirect:../member/login_form.do";
+		}
+		
+		
+		//아이피넣기
+		vo.setP_ip(request.getRemoteAddr());
+		
+		
+		//\n 엔터를 를 <br>로 바꾸기
+		String p_content=vo.getP_content().replaceAll("\n", "<br>");
+		vo.setP_content(p_content);
+		
+		int res = photo_dao.update(vo);
+		
+		
+		
+		return "redirect:list.do";
+	}
+	
+	
+	//게시판 삭제 ( 이미지랑 DB데이터 삭졔)
+	//  photo/delete.do?p_idx=5&page=
+	@RequestMapping("/photo/delete.do")
+	public String delete(int p_idx,@RequestParam(name="page",defaultValue = "1") int page
+						,RedirectAttributes ra) {
+		System.out.println("삭제할 p_idx : "+p_idx);
+		PhotoVo vo=photo_dao.selecOne(p_idx);
+		String absPath=application.getRealPath("/images/");
+		File del_f = new File(absPath,vo.getP_filename());
+		del_f.delete();
+		int res = photo_dao.delete(p_idx);
+		
+		//원래있던페이지로 돌아가라
+		ra.addAttribute("page",page);
+		ra.addAttribute("aa",123);
+		ra.addAttribute("bb","bb");
+		return "redirect:list.do";
 	}
 	
 }

@@ -36,7 +36,7 @@
  	margin-top: 10px;
  	
  	/* 사이즈가 넘어가면 스크롤 처리한다. */
- 	overflow-y:scroll;
+ 	/* overflow-y:scroll; */
  }
  .photo{
  	width: 160px;
@@ -105,6 +105,7 @@
 	//  수정 / 삭제할 p_idx를 저장해놓을 전역변수
 	// let은 지역변수때 많이사용 //전역변수 var?
 	var global_p_idx;
+	var global_p_filename;
 	
 	function photo_detail(p_idx){
 	  global_p_idx=p_idx;
@@ -118,6 +119,9 @@
 		 ,dataType 	: "json"
 		 ,success	: function(res_data){
 			 
+			  //전역변수에 파일명 받아두기
+			  global_p_filename = res_data.p_filename;
+			  
 			  //res_data = { "p_idx":5, "p_subject":"제목", "p_content":"내용","p_filename":"a.jpg",...}
 			  
 			  $("#photo_detail > img").attr("src","${ pageContext.request.contextPath }/images/" + res_data.p_filename);
@@ -159,11 +163,32 @@
 	
 	}//end : photo_detail()
 	
+	//수정폼 띄우기
 	function photo_modify_form(){
 		
 		location.href="modify_form.do?p_idx="+global_p_idx //PhotoContoller
 		
 	}//end : phot_modify_form()
+	
+	/* -------------------------------------------------  */
+	
+	//삭제처리
+	function photo_delete(){
+		if(confirm("정말 삭제 하시겠습니까?")==false)return;
+		
+		location.href="delete.do?p_idx="+global_p_idx+"&page=${param.page}";
+	}//end : photo_delete()
+	
+	
+	/* -------------------------------------------------  */
+	
+	//다운로드처리
+	function photo_file_download(){
+		//현재경로 photo
+		location.href="${pageContext.request.contextPath}/FileDownload.do?dir=/images/&filename="
+					+encodeURIComponent(global_p_filename,"utf-8");
+		
+	}
 	
 	
 </script>
@@ -222,6 +247,31 @@
 			</div>
 			
 		</c:forEach>
+	</div>
+	
+	
+	<!-- 페이지 메뉴 -->
+	<div style="text-align: center;">
+			<ul class="pagination">
+			
+			<c:forEach var="no" begin="1" end="5">
+				<c:if test="${ no eq param.page }">
+			  		<li class="active"><a href="list.do?page=${no }" >${no }</a></li>
+				</c:if>
+				<c:if test="${ no ne param.page }">
+			  		<li><a href="list.do?page=${no }">${no }</a></li>
+				</c:if>
+			</c:forEach>
+			<!-- 
+			  <li><a href="list.do?page=1">1</a></li>
+			  <li><a href="?page=2">2</a></li>
+			  <li><a href="list.do?page=3">3</a></li>
+			 -->
+			</ul>
+	</div>
+	
+	<div style="text-align: center;">
+		${ pageMenu }
 	</div>
 
 

@@ -48,7 +48,8 @@
         
         <div class="modal-footer">
         
-          <input class="btn btn-success" type="button" value='다운로드' style="display: none;">
+          <input class="btn btn-success" type="button" value='다운로드' style="display: none;" 
+          			onclick="photo_file_download();">
           
           <input class="btn btn-info" type="button" value="수정하기" style="display: none;"
           			onclick="photo_modify_form();">

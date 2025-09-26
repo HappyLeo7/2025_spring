@@ -1,13 +1,22 @@
 package dao;
 
 import java.util.List;
+import java.util.Map;
 
 import vo.PhotoVo;
 
 public interface PhotoDao {
 	
 	List<PhotoVo> selectList();
+	
+	/**페이지 처리해서 전체조회해오기 map 데이터 start , end 키값 받아오기*/
+	List<PhotoVo> selectList(Map<String, Object> map);
+	
 	PhotoVo selecOne(int p_idx);
+	
+	/**전체 레코드수 구하는 매서드*/
+	int selectRowTotal(); 
+
 	
 	int insert(PhotoVo vo);
 	int update(PhotoVo vo);

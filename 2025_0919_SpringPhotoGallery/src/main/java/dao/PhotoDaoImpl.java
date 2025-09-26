@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class PhotoDaoImpl implements PhotoDao {
 	@Override
 	public int update(PhotoVo vo) {
 		// TODO Auto-generated method stub
-		return sqlSession.update("");
+		return sqlSession.update("photo.photo_update",vo);
 	}
 
 	@Override
@@ -54,6 +55,20 @@ public class PhotoDaoImpl implements PhotoDao {
 	public int delete(int p_idx) {
 		// TODO Auto-generated method stub
 		return sqlSession.delete("photo.photo_delete",p_idx);
+	}
+
+	
+	/**페이지 처리해서 전체조회해오기*/
+	@Override
+	public List<PhotoVo> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("photo.photo_page_list",map);
+	}
+
+	@Override
+	public int selectRowTotal() {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("photo.photo_row_total");
 	}
 
 }

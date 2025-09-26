@@ -27,11 +27,46 @@ alter table photo
 									
 									
 --전체조회	
-select * from photo
+select * from photo;
+
+--전체게시물수 구하기 nvl(null,0)는 null이면 0을 넣어라 라는 의미
+select nvl(count(*),0) from photo;
+
+--Paging 처리를 위한 SQL
+select * 
+	from
+		(
+		select
+		rank() over(order by p_idx) no
+		,p.*
+		from(select * from photo order by p_idx)p
+		)
+where no between 1 and 8 
+
+
+-- p_idx 기준으로 나열
+select * from photo order by p_idx
+select * from photo order by p_idx asc
+select * from photo order by p_idx desc
 
 
 
-select * from photo order by 1 desc
+
+--더미 데이터 추가
+insert into PHOTO values(seq_photo_p_idx.nextval,'제목','내용','filaname','0:0:0',sysdate,sysdate,1);
+
+
+
+
+
+
+-- 수정하기
+update photo set p_subject='제목'
+				,p_content='축구'
+				,p_ip='1010'
+				,p_lastmodifydate=sysdate
+				where p_idx=14;
+
 
 
 

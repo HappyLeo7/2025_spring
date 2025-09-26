@@ -104,6 +104,7 @@ function photo_change(){
 </form>
 
 	<form>
+	<input type="hidden" name="p_idx" value="${vo.p_idx }">
 		<div id="box">
 			<div class="panel panel-primary">
 				<div class="panel-headding">

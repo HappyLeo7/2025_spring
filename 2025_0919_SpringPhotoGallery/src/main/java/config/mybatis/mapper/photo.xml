@@ -8,6 +8,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="photo_list" resultType="vo.PhotoVo">
 		select * from photo order by p_idx desc
 	</select>
+	
+	<select id="photo_row_total" resultType="int">
+		select nvl(count(*),0) from photo
+	</select>
+	
+	
+	<!-- 페이지 처리 sql 조회 -->
+	<select id="photo_page_list" parameterType="Map" resultType="photo">
+				select * 
+					from
+						(
+						select
+						rank() over(order by p_idx) no
+						,p.*
+						from(select * from photo order by p_idx desc)p
+						)
+				where no between #{start} and #{end} 
+	</select>
+	
 
 	<!-- p_idx에 대한 PhotoVo 1개 얻어오기 -->
 	<select id="photo_one" resultType="photo" parameterType="int">
@@ -29,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 삭제 -->
 	<delete id="photo_delete" parameterType="int">
-		delete from phot where p_idx=#{p_idx}
+		delete from photo where p_idx=#{p_idx}
 	</delete>
 	
 	<!-- 파일명만 수정 -->
@@ -38,6 +57,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 					,p_lastmodifydate=sysdate
 		where p_idx=#{p_idx}
 		
+	</update>
+	
+	<!-- 내용수정 -->
+	<update id="photo_update" parameterType="photo">
+		update photo set p_subject=#{p_subject}
+						,p_content=#{p_content}
+						,p_ip=#{p_ip}
+						,p_lastmodifydate=sysdate
+						where p_idx=#{p_idx}
 	</update>
 	
 </mapper>
